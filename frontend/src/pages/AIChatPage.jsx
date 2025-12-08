@@ -107,118 +107,118 @@ const AIChatPage = () => {
 
   if (!user) {
     return (
-      <div className="page-container">
-        <div className="card">
-          <h2>Please Log In</h2>
-          <p>You need to be logged in to access AI Chat Support.</p>
+      <div className="page-container-full">
+        <div className="ai-chat-page">
+          <div className="ai-chat-background"></div>
+           <div className="ai-chat-wrapper" style={{justifyContent: 'center', alignItems: 'center'}}>
+            <div className="card" style={{zIndex: 2, background: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(10px)'}}>
+              <h2>Please Log In</h2>
+              <p>You need to be logged in to access AI Chat Support.</p>
+            </div>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="ai-chat-page">
-      <div className="ai-chat-header">
-        <div className="header-content">
-          <h1>🤖 AI Mental Health Support</h1>
-          <p className="subtitle">
-            Chat with our AI assistant about mental health, stress, anxiety, and
-            emotional wellbeing
-          </p>
-        </div>
-        <button
-          onClick={handleClearChat}
-          className="btn btn-secondary btn-small"
-        >
-          Clear Chat
-        </button>
-      </div>
-
-      <div className="ai-chat-notice">
-        <p>
-          <strong>⚠️ Important:</strong> This AI assistant provides general
-          mental health information and support. It is not a replacement for
-          professional therapy or emergency services. If you're in crisis,
-          please contact your local emergency services or crisis helpline
-          immediately.
-        </p>
-      </div>
-
-      <div className="ai-chat-container">
-        <div className="messages-container">
-          {messages.map((msg, index) => (
-            <div
-              key={index}
-              className={`message ${
-                msg.role === "user" ? "user-message" : "ai-message"
-              }`}
-            >
-              <div className="message-avatar">
-                {msg.role === "user" ? "👤" : "🤖"}
-              </div>
-              <div className="message-content">
-                <div className="message-text">{msg.content}</div>
-                <div className="message-timestamp">
-                  {new Date(msg.timestamp).toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                </div>
-              </div>
+    <div className="page-container-full">
+      <div className="ai-chat-page">
+        <div className="ai-chat-background"></div>
+        <div className="ai-chat-wrapper">
+          <div className="ai-chat-header">
+            <div className="header-content">
+              <h1>🤖 AI Mental Health Support</h1>
+              <p className="subtitle">
+                Chat with our AI assistant about mental health, stress, anxiety, and
+                emotional wellbeing
+              </p>
             </div>
-          ))}
-
-          {isLoading && (
-            <div className="message ai-message">
-              <div className="message-avatar">🤖</div>
-              <div className="message-content">
-                <div className="typing-indicator">
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </div>
-              </div>
-            </div>
-          )}
-
-          <div ref={messagesEndRef} />
-        </div>
-
-        {error && (
-          <div className="chat-error">
-            <p>{error}</p>
-          </div>
-        )}
-
-        <form onSubmit={handleSendMessage} className="message-input-form">
-          <div className="input-wrapper">
-            <textarea
-              value={inputMessage}
-              onChange={(e) => setInputMessage(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault();
-                  handleSendMessage(e);
-                }
-              }}
-              placeholder="Type your message... (Press Enter to send, Shift+Enter for new line)"
-              rows="1"
-              disabled={isLoading}
-              className="message-input"
-            />
             <button
-              type="submit"
-              disabled={!inputMessage.trim() || isLoading}
-              className="send-button"
+              onClick={handleClearChat}
+              className="btn btn-secondary btn-small"
             >
-              {isLoading ? "⏳" : "📤"}
+              Clear Chat
             </button>
           </div>
-          <div className="input-hint">
-            💡 Ask me about stress management, coping strategies, anxiety,
-            study-life balance, or any mental health concerns
+
+          <div className="ai-chat-container">
+            <div className="messages-container">
+              {messages.map((msg, index) => (
+                <div
+                  key={index}
+                  className={`message ${
+                    msg.role === "user" ? "user-message" : "ai-message"
+                  }`}
+                >
+                  <div className="message-avatar">
+                    {msg.role === "user" ? "👤" : "🤖"}
+                  </div>
+                  <div className="message-content">
+                    <div className="message-text">{msg.content}</div>
+                    <div className="message-timestamp">
+                      {new Date(msg.timestamp).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </div>
+                  </div>
+                </div>
+              ))}
+
+              {isLoading && (
+                <div className="message ai-message">
+                  <div className="message-avatar">🤖</div>
+                  <div className="message-content">
+                    <div className="typing-indicator">
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <div ref={messagesEndRef} />
+            </div>
+
+            {error && (
+              <div className="chat-error" style={{padding: '0 20px', color: 'var(--danger)'}}>
+                <p>{error}</p>
+              </div>
+            )}
+
+            <form onSubmit={handleSendMessage} className="message-input-form">
+              <div className="input-wrapper">
+                <textarea
+                  value={inputMessage}
+                  onChange={(e) => setInputMessage(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      handleSendMessage(e);
+                    }
+                  }}
+                  placeholder="Type your message... (Press Enter to send, Shift+Enter for new line)"
+                  rows="1"
+                  disabled={isLoading}
+                  className="message-input"
+                />
+                <button
+                  type="submit"
+                  disabled={!inputMessage.trim() || isLoading}
+                  className="send-button"
+                >
+                  {isLoading ? "⏳" : "📤"}
+                </button>
+              </div>
+              <div className="input-hint">
+                💡 Ask me about stress management, coping strategies, anxiety,
+                study-life balance, or any mental health concerns
+              </div>
+            </form>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );

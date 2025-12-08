@@ -12,7 +12,6 @@ import CounselorDashboardPage from "./pages/CounselorDashboardPage";
 import AIChatPage from "./pages/AIChatPage";
 
 import Navbar from "./components/Navbar";
-import CrisisBanner from "./components/CrisisBanner";
 import WaterfallBackground from "./components/WaterfallBackground";
 
 import "./App.css";
@@ -24,7 +23,6 @@ function App() {
         <WaterfallBackground />
         <div className="app-container">
           <Navbar />
-          <CrisisBanner />
           <main className="main-content">
             <Routes>
               <Route path="/" element={<LandingPage />} />
