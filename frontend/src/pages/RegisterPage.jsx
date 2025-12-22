@@ -14,7 +14,7 @@ const RegisterPage = () => {
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  
+
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -48,69 +48,91 @@ const RegisterPage = () => {
         {error && <div className="alert alert-error">{error}</div>}
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
-            <label htmlFor="name">Full Name</label>
+            <label htmlFor="name" className="form-label">
+              Full Name
+            </label>
             <input
               type="text"
               id="name"
               name="name"
               value={formData.name}
               onChange={handleChange}
+              className="form-input"
               required
             />
           </div>
           <div className="form-group">
-            <label htmlFor="email">Email</label>
+            <label htmlFor="email" className="form-label">
+              Email
+            </label>
             <input
               type="email"
               id="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
+              className="form-input"
               required
             />
           </div>
           <div className="form-group">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password" className="form-label">
+              Password
+            </label>
             <input
               type="password"
               id="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
+              className="form-input"
               required
             />
           </div>
           <div className="form-group">
-            <label htmlFor="institution">Institution</label>
+            <label htmlFor="institution" className="form-label">
+              Institution
+            </label>
             <input
               type="text"
               id="institution"
               name="institution"
               value={formData.institution}
               onChange={handleChange}
+              className="form-input"
             />
           </div>
           <div className="form-group">
-            <label htmlFor="program">Program</label>
+            <label htmlFor="program" className="form-label">
+              Program
+            </label>
             <input
               type="text"
               id="program"
               name="program"
               value={formData.program}
               onChange={handleChange}
+              className="form-input"
             />
           </div>
           <div className="form-group">
-            <label htmlFor="year">Year</label>
+            <label htmlFor="year" className="form-label">
+              Year
+            </label>
             <input
               type="text"
               id="year"
               name="year"
               value={formData.year}
               onChange={handleChange}
+              className="form-input"
             />
           </div>
-          <button type="submit" className="btn btn-primary" disabled={loading}>
+          <button
+            type="submit"
+            className="btn btn-primary btn-block"
+            disabled={loading}
+          >
             {loading ? "Creating account..." : "Register"}
           </button>
         </form>

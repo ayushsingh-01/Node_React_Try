@@ -1,23 +1,23 @@
 import { format, startOfWeek, addDays, subWeeks, isSameDay } from "date-fns";
+import { FiCalendar, FiFrown, FiMeh, FiSmile } from "react-icons/fi";
 
 const MoodHeatmap = ({ entries }) => {
   if (!entries || entries.length === 0) {
     return (
       <div className="empty-state">
-        <div className="empty-state-icon">🗓️</div>
+        <FiCalendar className="empty-state-icon" />
         <p>No mood data yet</p>
         <p>Track your mood to see patterns!</p>
       </div>
     );
   }
 
-  
   const getHeatmapData = () => {
     const weeks = [];
     const today = new Date();
 
     for (let i = 11; i >= 0; i--) {
-      const weekStart = startOfWeek(subWeeks(today, i), { weekStartsOn: 1 }); 
+      const weekStart = startOfWeek(subWeeks(today, i), { weekStartsOn: 1 });
       const week = [];
 
       for (let j = 0; j < 7; j++) {
@@ -47,20 +47,20 @@ const MoodHeatmap = ({ entries }) => {
 
   const getMoodColor = (mood) => {
     if (mood === null) return "#f5f5f5";
-    if (mood >= 4.5) return "#43e97b"; 
-    if (mood >= 3.5) return "#4facfe"; 
-    if (mood >= 2.5) return "#ffa502"; 
-    if (mood >= 1.5) return "#ff6b6b"; 
-    return "#ee5a6f"; 
+    if (mood >= 4.5) return "#43e97b";
+    if (mood >= 3.5) return "#4facfe";
+    if (mood >= 2.5) return "#ffa502";
+    if (mood >= 1.5) return "#ff6b6b";
+    return "#ee5a6f";
   };
 
-  const getMoodEmoji = (mood) => {
-    if (mood === null) return "";
-    if (mood >= 4.5) return "😄";
-    if (mood >= 3.5) return "🙂";
-    if (mood >= 2.5) return "😐";
-    if (mood >= 1.5) return "😟";
-    return "😢";
+  const getMoodIcon = (mood) => {
+    if (mood === null) return null;
+    if (mood >= 4.5) return FiSmile;
+    if (mood >= 3.5) return FiSmile;
+    if (mood >= 2.5) return FiMeh;
+    if (mood >= 1.5) return FiFrown;
+    return FiFrown;
   };
 
   const weeks = getHeatmapData();
@@ -92,11 +92,15 @@ const MoodHeatmap = ({ entries }) => {
                       : "No data"
                   }`}
                 >
-                  {day.mood !== null && (
-                    <span className="heatmap-emoji">
-                      {getMoodEmoji(day.mood)}
-                    </span>
-                  )}
+                  {day.mood !== null &&
+                    (() => {
+                      const MoodIcon = getMoodIcon(day.mood);
+                      return MoodIcon ? (
+                        <span className="heatmap-icon">
+                          <MoodIcon />
+                        </span>
+                      ) : null;
+                    })()}
                 </div>
               ))}
             </div>
@@ -111,35 +115,45 @@ const MoodHeatmap = ({ entries }) => {
               className="legend-color"
               style={{ backgroundColor: "#ee5a6f" }}
             ></div>
-            <span>😢 Very Sad</span>
+            <span>
+              <FiFrown style={{ marginRight: "0.25rem" }} /> Very Sad
+            </span>
           </div>
           <div className="legend-item">
             <div
               className="legend-color"
               style={{ backgroundColor: "#ff6b6b" }}
             ></div>
-            <span>😟 Sad</span>
+            <span>
+              <FiFrown style={{ marginRight: "0.25rem" }} /> Sad
+            </span>
           </div>
           <div className="legend-item">
             <div
               className="legend-color"
               style={{ backgroundColor: "#ffa502" }}
             ></div>
-            <span>😐 Okay</span>
+            <span>
+              <FiMeh style={{ marginRight: "0.25rem" }} /> Okay
+            </span>
           </div>
           <div className="legend-item">
             <div
               className="legend-color"
               style={{ backgroundColor: "#4facfe" }}
             ></div>
-            <span>🙂 Good</span>
+            <span>
+              <FiSmile style={{ marginRight: "0.25rem" }} /> Good
+            </span>
           </div>
           <div className="legend-item">
             <div
               className="legend-color"
               style={{ backgroundColor: "#43e97b" }}
             ></div>
-            <span>😄 Great</span>
+            <span>
+              <FiSmile style={{ marginRight: "0.25rem" }} /> Great
+            </span>
           </div>
         </div>
       </div>

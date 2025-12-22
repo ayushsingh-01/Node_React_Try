@@ -1,5 +1,14 @@
 import { useMemo } from "react";
 import { differenceInDays } from "date-fns";
+import {
+  FiTrendingUp,
+  FiTrendingDown,
+  FiMinus,
+  FiActivity,
+  FiSmile,
+  FiZap,
+  FiBarChart2,
+} from "react-icons/fi";
 
 const MoodStats = ({ entries }) => {
   const stats = useMemo(() => {
@@ -17,7 +26,6 @@ const MoodStats = ({ entries }) => {
       (a, b) => new Date(a.date) - new Date(b.date)
     );
 
-    
     const calculateStreak = () => {
       let streak = 0;
       const today = new Date();
@@ -38,11 +46,9 @@ const MoodStats = ({ entries }) => {
       return streak;
     };
 
-    
     const avgMood =
       entries.reduce((sum, e) => sum + e.mood, 0) / entries.length;
 
-    
     const last7Days = entries.slice(-7);
     const previous7Days = entries.slice(-14, -7);
 
@@ -58,7 +64,6 @@ const MoodStats = ({ entries }) => {
       else if (avgLast7 < avgPrev7 - 0.3) moodTrend = "declining";
     }
 
-    
     const bestMood = Math.max(...entries.map((e) => e.mood));
 
     return {
@@ -71,9 +76,9 @@ const MoodStats = ({ entries }) => {
   }, [entries]);
 
   const getTrendIcon = (trend) => {
-    if (trend === "improving") return "📈";
-    if (trend === "declining") return "📉";
-    return "➡️";
+    if (trend === "improving") return <FiTrendingUp />;
+    if (trend === "declining") return <FiTrendingDown />;
+    return <FiMinus />;
   };
 
   const getTrendColor = (trend) => {
@@ -82,56 +87,60 @@ const MoodStats = ({ entries }) => {
     return "#4facfe";
   };
 
-  const getMoodEmoji = (avg) => {
+  const getMoodIcon = (avg) => {
     const num = parseFloat(avg);
-    if (num >= 4.5) return "😄";
-    if (num >= 3.5) return "🙂";
-    if (num >= 2.5) return "😐";
-    if (num >= 1.5) return "😟";
-    return "😢";
+    if (num >= 4.5) return FiSmile;
+    if (num >= 3.5) return FiSmile;
+    if (num >= 2.5) return FiActivity;
+    if (num >= 1.5) return FiActivity;
+    return FiActivity;
   };
 
+  const MoodIconComponent = getMoodIcon(stats.avgMood);
+  const TrendIconComponent = getTrendIcon(stats.moodTrend);
+
   return (
-    <div className="mood-stats">
+    <div className="stats-grid">
       <div className="stat-card">
-        <div className="stat-icon">📊</div>
-        <div className="stat-content">
-          <div className="stat-value">{stats.totalEntries}</div>
-          <div className="stat-label">Total Entries</div>
-        </div>
-      </div>
-
-      <div className="stat-card">
-        <div className="stat-icon">{getMoodEmoji(stats.avgMood)}</div>
-        <div className="stat-content">
-          <div className="stat-value">{stats.avgMood} / 5.0</div>
-          <div className="stat-label">Average Mood</div>
-        </div>
-      </div>
-
-      <div className="stat-card">
-        <div className="stat-icon">🔥</div>
-        <div className="stat-content">
-          <div className="stat-value">
-            {stats.currentStreak} {stats.currentStreak === 1 ? "day" : "days"}
+        <div className="stat-header">
+          <div className="stat-icon" style={{ color: "var(--primary-600)" }}>
+            <FiBarChart2 />
           </div>
-          <div className="stat-label">Current Streak</div>
         </div>
+        <div className="stat-value">{stats.totalEntries}</div>
+        <div className="stat-label">Total Entries</div>
       </div>
 
-      <div className="stat-card">
-        <div
-          className="stat-icon"
-          style={{ color: getTrendColor(stats.moodTrend) }}
-        >
-          {getTrendIcon(stats.moodTrend)}
-        </div>
-        <div className="stat-content">
-          <div className="stat-value" style={{ textTransform: "capitalize" }}>
-            {stats.moodTrend}
+      <div className="stat-card success">
+        <div className="stat-header">
+          <div className="stat-icon">
+            <MoodIconComponent />
           </div>
-          <div className="stat-label">7-Day Trend</div>
         </div>
+        <div className="stat-value">{stats.avgMood} / 5.0</div>
+        <div className="stat-label">Average Mood</div>
+      </div>
+
+      <div className="stat-card warning">
+        <div className="stat-header">
+          <div className="stat-icon">
+            <FiZap />
+          </div>
+        </div>
+        <div className="stat-value">
+          {stats.currentStreak} {stats.currentStreak === 1 ? "day" : "days"}
+        </div>
+        <div className="stat-label">Current Streak</div>
+      </div>
+
+      <div className="stat-card info">
+        <div className="stat-header">
+          <div className="stat-icon">{TrendIconComponent}</div>
+        </div>
+        <div className="stat-value" style={{ textTransform: "capitalize" }}>
+          {stats.moodTrend}
+        </div>
+        <div className="stat-label">7-Day Trend</div>
       </div>
     </div>
   );
