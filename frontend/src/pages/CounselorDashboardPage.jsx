@@ -1,6 +1,13 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext.jsx";
 import axios from "../api/axiosClient";
+import {
+  FiUsers,
+  FiBookOpen,
+  FiFilter,
+  FiTrash2,
+  FiEdit,
+} from "react-icons/fi";
 import ResourceForm from "../components/ResourceForm";
 
 const CounselorDashboardPage = () => {
@@ -50,7 +57,6 @@ const CounselorDashboardPage = () => {
         counselorNote,
       });
 
-      
       setRequests(
         requests.map((req) => (req._id === requestId ? response.data : req))
       );
@@ -60,7 +66,7 @@ const CounselorDashboardPage = () => {
   };
 
   const handleResourceSubmit = () => {
-    fetchResources(); 
+    fetchResources();
   };
 
   const handleResourceDelete = async (resourceId) => {
@@ -81,72 +87,149 @@ const CounselorDashboardPage = () => {
   }
 
   return (
-    <div className="admin-dashboard">
-      <h1>Counselor Dashboard</h1>
-
-      <div className="admin-tabs">
+    <>
+      {/* Tabs */}
+      <div
+        style={{
+          display: "flex",
+          gap: "0.5rem",
+          marginBottom: "1.5rem",
+          borderBottom: "2px solid var(--gray-200)",
+          overflowX: "auto",
+        }}
+      >
         <button
-          className={activeTab === "requests" ? "tab active" : "tab"}
           onClick={() => setActiveTab("requests")}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "0.5rem",
+            padding: "0.75rem 1.5rem",
+            background: "none",
+            border: "none",
+            borderBottom:
+              activeTab === "requests"
+                ? "3px solid var(--primary-600)"
+                : "3px solid transparent",
+            color:
+              activeTab === "requests"
+                ? "var(--primary-600)"
+                : "var(--text-secondary)",
+            cursor: "pointer",
+            fontWeight: "600",
+            fontSize: "0.875rem",
+            transition: "all 0.2s",
+          }}
         >
-          Support Requests
+          <FiUsers /> Support Requests
         </button>
         <button
-          className={activeTab === "resources" ? "tab active" : "tab"}
           onClick={() => setActiveTab("resources")}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "0.5rem",
+            padding: "0.75rem 1.5rem",
+            background: "none",
+            border: "none",
+            borderBottom:
+              activeTab === "resources"
+                ? "3px solid var(--primary-600)"
+                : "3px solid transparent",
+            color:
+              activeTab === "resources"
+                ? "var(--primary-600)"
+                : "var(--text-secondary)",
+            cursor: "pointer",
+            fontWeight: "600",
+            fontSize: "0.875rem",
+            transition: "all 0.2s",
+          }}
         >
-          Manage Resources
+          <FiBookOpen /> Manage Resources
         </button>
       </div>
 
       {activeTab === "requests" ? (
-        <div className="admin-content">
-          <div className="filters">
-            <label>
-              Filter by status:
+        <div className="grid grid-cols-1" style={{ gap: "1.5rem" }}>
+          <div className="card" style={{ padding: "1rem" }}>
+            <div
+              style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
+            >
+              <FiFilter />
+              <label style={{ fontWeight: "600", marginRight: "1rem" }}>
+                Filter by status:
+              </label>
               <select
+                className="form-select"
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value)}
+                style={{ maxWidth: "200px" }}
               >
                 <option value="">All</option>
                 <option value="open">Open</option>
                 <option value="in_progress">In Progress</option>
                 <option value="closed">Closed</option>
               </select>
-            </label>
+            </div>
           </div>
 
           <div className="card">
-            <h2>Support Requests</h2>
+            <div className="card-header">
+              <h3 className="card-title">
+                <FiUsers /> Support Requests
+              </h3>
+              <p className="card-subtitle">{requests.length} requests</p>
+            </div>
             {loading ? (
-              <p>Loading requests...</p>
+              <div className="text-center" style={{ padding: "2rem" }}>
+                <div
+                  className="loading-spinner"
+                  style={{ margin: "0 auto" }}
+                ></div>
+              </div>
             ) : requests.length > 0 ? (
-              <div className="requests-list">
+              <div className="support-requests">
                 {requests.map((request) => (
-                  <div key={request._id} className="request-item admin-request">
-                    <div className="request-header">
-                      <h3>{request.topic}</h3>
-                      <span className={`status-badge status-${request.status}`}>
+                  <div key={request._id} className="support-request-item">
+                    <div className="support-request-header">
+                      <div>
+                        <h3 className="support-request-title">
+                          {request.topic}
+                        </h3>
+                        <p className="support-request-meta">
+                          <strong>Student:</strong> {request.student.name} (
+                          {request.student.email})
+                        </p>
+                      </div>
+                      <span
+                        className={`badge badge-${
+                          request.status === "closed"
+                            ? "success"
+                            : request.status === "in_progress"
+                            ? "warning"
+                            : "info"
+                        }`}
+                      >
                         {request.status.replace("_", " ")}
                       </span>
                     </div>
-                    <p>
-                      <strong>Student:</strong> {request.student.name} (
-                      {request.student.email})
-                    </p>
-                    <p>
+                    <p className="support-request-description">
                       <strong>Description:</strong> {request.description}
                     </p>
 
-                    <div className="request-response">
+                    <div style={{ marginTop: "1rem" }}>
                       <textarea
+                        className="form-textarea"
                         placeholder="Counselor notes..."
                         defaultValue={request.counselorNote || ""}
                         id={`note-${request._id}`}
+                        style={{ marginBottom: "0.75rem" }}
                       />
-                      <div className="status-buttons">
+                      <div style={{ display: "flex", gap: "0.5rem" }}>
                         <button
-                          className="btn btn-small btn-secondary"
+                          className="btn btn-secondary"
+                          style={{ fontSize: "0.875rem" }}
                           onClick={() =>
                             handleStatusChange(
                               request._id,
@@ -156,10 +239,11 @@ const CounselorDashboardPage = () => {
                             )
                           }
                         >
-                          In Progress
+                          <FiEdit /> In Progress
                         </button>
                         <button
-                          className="btn btn-small btn-success"
+                          className="btn btn-success"
+                          style={{ fontSize: "0.875rem" }}
                           onClick={() =>
                             handleStatusChange(
                               request._id,
@@ -174,7 +258,15 @@ const CounselorDashboardPage = () => {
                       </div>
                     </div>
 
-                    <div className="request-meta">
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: "1rem",
+                        fontSize: "0.75rem",
+                        color: "var(--text-tertiary)",
+                        marginTop: "1rem",
+                      }}
+                    >
                       <span>
                         Preferred Mode:{" "}
                         {request.preferredMode.replace("_", " ")}
@@ -188,59 +280,102 @@ const CounselorDashboardPage = () => {
                 ))}
               </div>
             ) : (
-              <p>No support requests found.</p>
+              <div
+                className="text-center"
+                style={{ padding: "2rem", color: "var(--text-secondary)" }}
+              >
+                <FiUsers
+                  style={{
+                    fontSize: "3rem",
+                    marginBottom: "1rem",
+                    opacity: 0.5,
+                  }}
+                />
+                <p>No support requests found.</p>
+              </div>
             )}
           </div>
         </div>
       ) : (
-        <div className="admin-content">
+        <div className="grid grid-cols-1" style={{ gap: "1.5rem" }}>
           <div className="card">
-            <h2>Add New Resource</h2>
+            <div className="card-header">
+              <h3 className="card-title">
+                <FiBookOpen /> Add New Resource
+              </h3>
+            </div>
             <ResourceForm onResourceSubmit={handleResourceSubmit} />
           </div>
 
           <div className="card">
-            <h2>Existing Resources</h2>
+            <div className="card-header">
+              <h3 className="card-title">
+                <FiBookOpen /> Existing Resources
+              </h3>
+              <p className="card-subtitle">{resources.length} resources</p>
+            </div>
             {loading ? (
-              <p>Loading resources...</p>
+              <div className="text-center" style={{ padding: "2rem" }}>
+                <div
+                  className="loading-spinner"
+                  style={{ margin: "0 auto" }}
+                ></div>
+              </div>
             ) : resources.length > 0 ? (
-              <div className="resources-list">
+              <div className="grid grid-cols-2" style={{ gap: "1rem" }}>
                 {resources.map((resource) => (
-                  <div key={resource._id} className="resource-item">
+                  <div key={resource._id} className="resource-card">
                     <h3>{resource.title}</h3>
-                    <p>
-                      <strong>Category:</strong> {resource.category}
+                    <span className="resource-category">
+                      {resource.category}
+                    </span>
+                    <p className="resource-description">
+                      {resource.description}
                     </p>
-                    <p>{resource.description}</p>
                     {resource.link && (
-                      <p>
-                        <a
-                          href={resource.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          View Resource
-                        </a>
-                      </p>
-                    )}
-                    <div className="resource-actions">
-                      <button
-                        className="btn btn-small btn-danger"
-                        onClick={() => handleResourceDelete(resource._id)}
+                      <a
+                        href={resource.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn btn-outline"
+                        style={{ fontSize: "0.875rem", marginTop: "0.5rem" }}
                       >
-                        Delete
-                      </button>
-                    </div>
+                        View Resource
+                      </a>
+                    )}
+                    <button
+                      className="btn btn-danger"
+                      style={{
+                        fontSize: "0.875rem",
+                        marginTop: "0.5rem",
+                        width: "100%",
+                      }}
+                      onClick={() => handleResourceDelete(resource._id)}
+                    >
+                      <FiTrash2 /> Delete
+                    </button>
                   </div>
                 ))}
               </div>
             ) : (
-              <p>No resources found.</p>
+              <div
+                className="text-center"
+                style={{ padding: "2rem", color: "var(--text-secondary)" }}
+              >
+                <FiBookOpen
+                  style={{
+                    fontSize: "3rem",
+                    marginBottom: "1rem",
+                    opacity: 0.5,
+                  }}
+                />
+                <p>No resources found.</p>
+              </div>
             )}
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

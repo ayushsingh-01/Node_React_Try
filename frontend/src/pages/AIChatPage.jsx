@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../context/AuthContext.jsx";
 import axios from "../api/axiosClient";
+import { FiSend, FiTrash2, FiUser, FiCpu } from "react-icons/fi";
 
 const AIChatPage = () => {
   const { user } = useAuth();
@@ -10,7 +11,6 @@ const AIChatPage = () => {
   const [error, setError] = useState("");
   const messagesEndRef = useRef(null);
 
-  
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -19,13 +19,11 @@ const AIChatPage = () => {
     scrollToBottom();
   }, [messages]);
 
-  
   useEffect(() => {
     const savedMessages = localStorage.getItem("aiChatMessages");
     if (savedMessages) {
       setMessages(JSON.parse(savedMessages));
     } else {
-      
       setMessages([
         {
           role: "assistant",
@@ -37,7 +35,6 @@ const AIChatPage = () => {
     }
   }, []);
 
-  
   useEffect(() => {
     if (messages.length > 0) {
       localStorage.setItem("aiChatMessages", JSON.stringify(messages));
@@ -55,20 +52,17 @@ const AIChatPage = () => {
       timestamp: new Date().toISOString(),
     };
 
-    
     setMessages((prev) => [...prev, userMessage]);
     setInputMessage("");
     setIsLoading(true);
     setError("");
 
     try {
-      
       const response = await axios.post("/ai-chat", {
         message: userMessage.content,
         conversationHistory: messages,
       });
 
-      
       const aiMessage = {
         role: "assistant",
         content: response.data.reply,
@@ -83,9 +77,8 @@ const AIChatPage = () => {
           "Failed to get response. Please try again."
       );
 
-      
       setMessages((prev) => prev.slice(0, -1));
-      setInputMessage(userMessage.content); 
+      setInputMessage(userMessage.content);
     } finally {
       setIsLoading(false);
     }
@@ -110,8 +103,18 @@ const AIChatPage = () => {
       <div className="page-container-full">
         <div className="ai-chat-page">
           <div className="ai-chat-background"></div>
-           <div className="ai-chat-wrapper" style={{justifyContent: 'center', alignItems: 'center'}}>
-            <div className="card" style={{zIndex: 2, background: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(10px)'}}>
+          <div
+            className="ai-chat-wrapper"
+            style={{ justifyContent: "center", alignItems: "center" }}
+          >
+            <div
+              className="card"
+              style={{
+                zIndex: 2,
+                background: "rgba(255,255,255,0.9)",
+                backdropFilter: "blur(10px)",
+              }}
+            >
               <h2>Please Log In</h2>
               <p>You need to be logged in to access AI Chat Support.</p>
             </div>
@@ -128,17 +131,23 @@ const AIChatPage = () => {
         <div className="ai-chat-wrapper">
           <div className="ai-chat-header">
             <div className="header-content">
-              <h1>🤖 AI Mental Health Support</h1>
+              <h1
+                style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
+              >
+                <FiCpu style={{ fontSize: "1.75rem" }} /> AI Mental Health
+                Support
+              </h1>
               <p className="subtitle">
-                Chat with our AI assistant about mental health, stress, anxiety, and
-                emotional wellbeing
+                Chat with our AI assistant about mental health, stress, anxiety,
+                and emotional wellbeing
               </p>
             </div>
             <button
               onClick={handleClearChat}
               className="btn btn-secondary btn-small"
+              style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
             >
-              Clear Chat
+              <FiTrash2 /> Clear Chat
             </button>
           </div>
 
@@ -152,7 +161,7 @@ const AIChatPage = () => {
                   }`}
                 >
                   <div className="message-avatar">
-                    {msg.role === "user" ? "👤" : "🤖"}
+                    {msg.role === "user" ? <FiUser /> : <FiCpu />}
                   </div>
                   <div className="message-content">
                     <div className="message-text">{msg.content}</div>
@@ -168,7 +177,9 @@ const AIChatPage = () => {
 
               {isLoading && (
                 <div className="message ai-message">
-                  <div className="message-avatar">🤖</div>
+                  <div className="message-avatar">
+                    <FiCpu />
+                  </div>
                   <div className="message-content">
                     <div className="typing-indicator">
                       <span></span>
@@ -183,7 +194,10 @@ const AIChatPage = () => {
             </div>
 
             {error && (
-              <div className="chat-error" style={{padding: '0 20px', color: 'var(--danger)'}}>
+              <div
+                className="chat-error"
+                style={{ padding: "0 20px", color: "var(--danger)" }}
+              >
                 <p>{error}</p>
               </div>
             )}
@@ -209,11 +223,11 @@ const AIChatPage = () => {
                   disabled={!inputMessage.trim() || isLoading}
                   className="send-button"
                 >
-                  {isLoading ? "⏳" : "📤"}
+                  <FiSend />
                 </button>
               </div>
               <div className="input-hint">
-                💡 Ask me about stress management, coping strategies, anxiety,
+                Ask me about stress management, coping strategies, anxiety,
                 study-life balance, or any mental health concerns
               </div>
             </form>

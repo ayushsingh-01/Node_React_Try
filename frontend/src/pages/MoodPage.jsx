@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext.jsx";
 import axios from "../api/axiosClient";
+import { FiActivity, FiPlusCircle, FiClock } from "react-icons/fi";
 import MoodForm from "../components/MoodForm";
 import MoodList from "../components/MoodList";
 
@@ -27,30 +28,51 @@ const MoodPage = () => {
   }, [user]);
 
   if (!user) {
-    return <div>Please log in to track your mood.</div>;
+    return (
+      <div className="alert alert-warning">
+        Please log in to track your mood.
+      </div>
+    );
   }
 
   return (
-    <div className="mood-page">
-      <h1>Mood Tracker</h1>
-      <div className="mood-content">
+    <>
+      <div className="grid grid-cols-1" style={{ gap: "1.5rem" }}>
         <div className="card">
-          <h2>Add New Entry</h2>
+          <div className="card-header">
+            <h3 className="card-title">
+              <FiPlusCircle /> Add New Entry
+            </h3>
+            <p className="card-subtitle">Track how you're feeling today</p>
+          </div>
           <MoodForm onMoodSubmit={loadEntries} />
         </div>
-        
+
         <div className="card">
-          <h2>Your Mood History</h2>
+          <div className="card-header">
+            <h3 className="card-title">
+              <FiClock /> Your Mood History
+            </h3>
+            <p className="card-subtitle">{entries.length} total entries</p>
+          </div>
           {loading ? (
-            <p>Loading...</p>
+            <div className="loading-spinner"></div>
           ) : entries.length > 0 ? (
             <MoodList entries={entries} showAll={true} />
           ) : (
-            <p>No mood entries yet. Add your first entry above!</p>
+            <div
+              className="text-center"
+              style={{ padding: "2rem", color: "var(--text-secondary)" }}
+            >
+              <FiActivity
+                style={{ fontSize: "3rem", marginBottom: "1rem", opacity: 0.5 }}
+              />
+              <p>No mood entries yet. Add your first entry above!</p>
+            </div>
           )}
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

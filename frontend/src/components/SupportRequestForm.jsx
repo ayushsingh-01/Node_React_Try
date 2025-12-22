@@ -32,7 +32,7 @@ const SupportRequestForm = ({ onRequestSubmit }) => {
         preferredMode: "email",
         description: "",
       });
-      
+
       if (onRequestSubmit) {
         onRequestSubmit();
       }
@@ -50,20 +50,19 @@ const SupportRequestForm = ({ onRequestSubmit }) => {
           Your support request has been submitted successfully!
         </div>
       )}
-      
-      {error && (
-        <div className="alert alert-error">
-          {error}
-        </div>
-      )}
-      
+
+      {error && <div className="alert alert-error">{error}</div>}
+
       <div className="form-group">
-        <label htmlFor="topic">Topic</label>
+        <label htmlFor="topic" className="form-label">
+          Topic
+        </label>
         <select
           id="topic"
           name="topic"
           value={formData.topic}
           onChange={handleChange}
+          className="form-select"
           required
         >
           <option value="">Select a topic</option>
@@ -75,33 +74,39 @@ const SupportRequestForm = ({ onRequestSubmit }) => {
           <option value="Other">Other</option>
         </select>
       </div>
-      
+
       <div className="form-group">
-        <label htmlFor="preferredMode">Preferred Mode of Contact</label>
+        <label htmlFor="preferredMode" className="form-label">
+          Preferred Mode of Contact
+        </label>
         <select
           id="preferredMode"
           name="preferredMode"
           value={formData.preferredMode}
           onChange={handleChange}
+          className="form-select"
         >
           <option value="email">Email</option>
           <option value="call">Call</option>
           <option value="in_person">In-person</option>
         </select>
       </div>
-      
+
       <div className="form-group">
-        <label htmlFor="description">Description</label>
+        <label htmlFor="description" className="form-label">
+          Description
+        </label>
         <textarea
           id="description"
           name="description"
           value={formData.description}
           onChange={handleChange}
           placeholder="Please describe your situation in detail..."
+          className="form-textarea"
           required
         />
       </div>
-      
+
       <button type="submit" className="btn btn-primary" disabled={loading}>
         {loading ? "Submitting..." : "Submit Request"}
       </button>

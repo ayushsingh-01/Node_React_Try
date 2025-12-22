@@ -29,9 +29,12 @@ const ResourceForm = ({ onResourceSubmit }) => {
     try {
       const resourceData = {
         ...formData,
-        tags: formData.tags.split(",").map(tag => tag.trim()).filter(tag => tag)
+        tags: formData.tags
+          .split(",")
+          .map((tag) => tag.trim())
+          .filter((tag) => tag),
       };
-      
+
       await axios.post("/resources", resourceData);
       setSuccess(true);
       setFormData({
@@ -41,7 +44,7 @@ const ResourceForm = ({ onResourceSubmit }) => {
         link: "",
         tags: "",
       });
-      
+
       if (onResourceSubmit) {
         onResourceSubmit();
       }
@@ -59,27 +62,28 @@ const ResourceForm = ({ onResourceSubmit }) => {
           Resource created successfully!
         </div>
       )}
-      
-      {error && (
-        <div className="alert alert-error">
-          {error}
-        </div>
-      )}
-      
+
+      {error && <div className="alert alert-error">{error}</div>}
+
       <div className="form-group">
-        <label htmlFor="title">Title</label>
+        <label htmlFor="title" className="form-label">
+          Title
+        </label>
         <input
           type="text"
           id="title"
           name="title"
           value={formData.title}
           onChange={handleChange}
+          className="form-input"
           required
         />
       </div>
-      
+
       <div className="form-group">
-        <label htmlFor="category">Category</label>
+        <label htmlFor="category" className="form-label">
+          Category
+        </label>
         <input
           type="text"
           id="category"
@@ -87,24 +91,30 @@ const ResourceForm = ({ onResourceSubmit }) => {
           value={formData.category}
           onChange={handleChange}
           placeholder="e.g., Stress, Sleep, Anxiety"
+          className="form-input"
           required
         />
       </div>
-      
+
       <div className="form-group">
-        <label htmlFor="description">Description</label>
+        <label htmlFor="description" className="form-label">
+          Description
+        </label>
         <textarea
           id="description"
           name="description"
           value={formData.description}
           onChange={handleChange}
           placeholder="Brief description of the resource"
+          className="form-textarea"
           required
         />
       </div>
-      
+
       <div className="form-group">
-        <label htmlFor="link">Link (optional)</label>
+        <label htmlFor="link" className="form-label">
+          Link (optional)
+        </label>
         <input
           type="url"
           id="link"
@@ -112,11 +122,14 @@ const ResourceForm = ({ onResourceSubmit }) => {
           value={formData.link}
           onChange={handleChange}
           placeholder="https://example.com"
+          className="form-input"
         />
       </div>
-      
+
       <div className="form-group">
-        <label htmlFor="tags">Tags (comma separated)</label>
+        <label htmlFor="tags" className="form-label">
+          Tags (comma separated)
+        </label>
         <input
           type="text"
           id="tags"
@@ -124,9 +137,10 @@ const ResourceForm = ({ onResourceSubmit }) => {
           value={formData.tags}
           onChange={handleChange}
           placeholder="stress, exams, relaxation"
+          className="form-input"
         />
       </div>
-      
+
       <button type="submit" className="btn btn-primary" disabled={loading}>
         {loading ? "Creating..." : "Create Resource"}
       </button>
